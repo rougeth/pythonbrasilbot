@@ -9,6 +9,7 @@ ipdb = "*"
 
 [packages]
 pytelegrambotapi = "*"
+python-decouple = "*"
 
 [requires]
 python_version = "3.8"

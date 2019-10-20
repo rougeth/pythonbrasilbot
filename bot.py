@@ -1,7 +1,10 @@
 import telebot
+from decouple import config
+
+TELEGRAM_TOKEN = config("TELEGRAM_TOKEN")
 
 
-bot = telebot.TeleBot("<TELEGRAM-BOT-TOKEN>")
+bot = telebot.TeleBot(TELEGRAM_TOKEN)
 
 
 @bot.message_handler(commands=["start"])
