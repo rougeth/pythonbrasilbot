@@ -1,6 +1,8 @@
 from telebot import TeleBot, types
 from decouple import config
 
+from utils import inline_keyboard
+
 TELEGRAM_TOKEN = config("TELEGRAM_TOKEN")
 
 
@@ -14,15 +16,10 @@ def hello_world(message):
 
 @bot.message_handler(commands=["local", "endereço", "endereco"])
 def address(message):
-    keyboard = types.InlineKeyboardMarkup()
-    keyboard.row(types.InlineKeyboardButton(
-        text="Tutoriais e Sprints",
-        callback_data="endereço_tutoriais_sprints",
-    ))
-    keyboard.row(types.InlineKeyboardButton(
-        text="Palestras",
-        callback_data="endereço_palestras"
-    ))
+    keyboard = inline_keyboard([
+        [("Tutoriais e Sprints", "endereço_tutoriais_sprints")],
+        [("Palestras", "endereço_palestras")],
+    ])
 
     bot.send_message(message.chat.id, "Para onde você quer ir?", reply_markup=keyboard)
 
@@ -62,27 +59,11 @@ def address_callback_query(callback):
 
 @bot.message_handler(commands=["grade", "programação", "programacao"])
 def address(message):
-    keyboard = types.InlineKeyboardMarkup()
-    keyboard.row(
-        types.InlineKeyboardButton(
-            text="Tutoriais",
-            callback_data="grade_tutoriais",
-        ),
-    )
-
-    keyboard.row(
-        types.InlineKeyboardButton(
-            text="Palestras",
-            callback_data="grade_palestras",
-        ),
-    )
-
-    keyboard.row(
-        types.InlineKeyboardButton(
-            text="Sprints",
-            callback_data="grade_sprints",
-        ),
-    )
+    keyboard = inline_keyboard([
+        [("Tutoriais", "grade_tutoriais")],
+        [("Palestras", "grade_palestras")],
+        [("Sprints", "grade_sprints")],
+    ])
 
     bot.send_message(
         message.chat.id,
@@ -100,40 +81,16 @@ def address(message):
 def select_activity_date(callback):
     if callback.data == "grade_tutoriais":
         message = "Você deseja ver a programação dos *tutoriais* de qual dia?"
-        keyboard = types.InlineKeyboardMarkup()
-        keyboard.row(
-            types.InlineKeyboardButton(
-                text="23 de Outubro",
-                callback_data="grade_tutoriais_23",
-            ),
-        )
-        keyboard.row(
-            types.InlineKeyboardButton(
-                text="24 de Outubro",
-                callback_data="grade_tutoriais_24",
-            ),
-        )
+        keyboard = inline_keyboard([
+            [("23 de Outubro", "grade_tutoriais_23")],
+            [("24 de Outubro", "grade_tutoriais_24")],
+        ])
     elif callback.data == "grade_palestras":
         message = "Você deseja ver a programação das *palestras* de qual dia?"
-        keyboard = types.InlineKeyboardMarkup()
-        keyboard.row(
-            types.InlineKeyboardButton(
-                text="25 de Outubro",
-                callback_data="grade_palestras_25",
-            ),
-        )
-        keyboard.row(
-            types.InlineKeyboardButton(
-                text="26 de Outubro",
-                callback_data="grade_palestras_26",
-            ),
-        )
-        keyboard.row(
-            types.InlineKeyboardButton(
-                text="27 de Outubro",
-                callback_data="grade_palestras_27",
-            ),
-        )
+        keyboard = inline_keyboard([
+            [("25 de Outubro", "grade_tutoriais_25")],
+            [("26 de Outubro", "grade_tutoriais_26")],
+        ])
 
     bot.edit_message_text(
         message,
