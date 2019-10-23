@@ -125,6 +125,7 @@ def tutoriais(callback):
     )
 
     message = ""
+    events = sorted(events,key=lambda event: event["start"]["dateTime"])
     for event in events:
         if event["start"]["dateTime"].day != day:
             continue
@@ -132,7 +133,7 @@ def tutoriais(callback):
         message += event_message_template.format(
             title=event["summary"],
             author=event["extendedProperties"]["private"]["author"],
-            time=event["start"]["dateTime"],
+            time=event["start"]["dateTime"].strftime("%Hh%M"),
         )
 
     bot.send_message(
