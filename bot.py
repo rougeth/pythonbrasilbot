@@ -60,5 +60,88 @@ def address_callback_query(callback):
     bot.send_location(callback.message.chat.id, lat, lon)
 
 
+@bot.message_handler(commands=["grade", "programação", "programacao"])
+def address(message):
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.row(
+        types.InlineKeyboardButton(
+            text="Tutoriais",
+            callback_data="grade_tutoriais",
+        ),
+    )
+
+    keyboard.row(
+        types.InlineKeyboardButton(
+            text="Palestras",
+            callback_data="grade_palestras",
+        ),
+    )
+
+    keyboard.row(
+        types.InlineKeyboardButton(
+            text="Sprints",
+            callback_data="grade_sprints",
+        ),
+    )
+
+    bot.send_message(
+        message.chat.id,
+        "Você quer ver a grade de quais atividades da *Python Brasil 2019*?",
+        parse_mode="Markdown",
+        reply_markup=keyboard,
+    )
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data in [
+    "grade_tutoriais",
+    "grade_palestras",
+    "grade_sprints",
+])
+def select_activity_date(callback):
+    if callback.data == "grade_tutoriais":
+        message = "Você deseja ver a programação dos *tutoriais* de qual dia?"
+        keyboard = types.InlineKeyboardMarkup()
+        keyboard.row(
+            types.InlineKeyboardButton(
+                text="23 de Outubro",
+                callback_data="grade_tutoriais_23",
+            ),
+        )
+        keyboard.row(
+            types.InlineKeyboardButton(
+                text="24 de Outubro",
+                callback_data="grade_tutoriais_24",
+            ),
+        )
+    elif callback.data == "grade_palestras":
+        message = "Você deseja ver a programação das *palestras* de qual dia?"
+        keyboard = types.InlineKeyboardMarkup()
+        keyboard.row(
+            types.InlineKeyboardButton(
+                text="25 de Outubro",
+                callback_data="grade_palestras_25",
+            ),
+        )
+        keyboard.row(
+            types.InlineKeyboardButton(
+                text="26 de Outubro",
+                callback_data="grade_palestras_26",
+            ),
+        )
+        keyboard.row(
+            types.InlineKeyboardButton(
+                text="27 de Outubro",
+                callback_data="grade_palestras_27",
+            ),
+        )
+
+    bot.edit_message_text(
+        message,
+        callback.message.chat.id,
+        callback.message.message_id,
+        parse_mode="Markdown",
+        reply_markup=keyboard,
+    )
+
 
 bot.polling()
