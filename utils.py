@@ -25,14 +25,21 @@ def get_calendar_events():
     return content.json()["items"]
 
 
-def get_tutorial_events():
-    events = get_calendar_events()
-    tutorials = []
+def filter_events_per_days(events, days):
+    filtered_events = []
     for event in events:
         start = event["start"]["dateTime"]
         start = datetime.fromisoformat(start)
-        if start.day in [23, 24]:
+        if start.day in days:
             event["start"]["dateTime"] = start
-            tutorials.append(event)
+            filtered_events.append(event)
 
-    return tutorials
+    return filtered_events
+
+def get_tutorial_events():
+    events = get_calendar_events()
+    return filter_events_per_days(events, [23, 24])
+
+def get_main_events():
+    events = get_calendar_events()
+    return filter_events_per_days(events, [25, 26, 27])
