@@ -3,8 +3,8 @@ from decouple import config
 from datetime import datetime
 import re
 
-from utils import inline_keyboard, get_events_by_date, get_event_template
-from database import content, current_year, get_grade_opcoes, grade_chaves
+from pythonbrasilbot.utils import inline_keyboard, get_events_by_date, get_event_template
+from pythonbrasilbot.database import content, current_year, get_grade_opcoes, grade_chaves
 
 
 TELEGRAM_TOKEN = config("TELEGRAM_TOKEN")
