@@ -1,5 +1,5 @@
 {
-    "calendar_url": "",
+    "calendar_url": "https://www.googleapis.com/calendar/v3/calendars/ft5mdp26mhosq2heu6g87mb7ns%40group.calendar.google.com/events?key=AIzaSyAIn8DyZFtthupLozgwIX3NUURFMWEIPb4&timeMin=2019-10-22T00%3A00%3A00.000Z&timeMax=2019-10-28T00%3A00%3A00.000Z&singleEvents=true&maxResults=9999&timeZone=America%2FSao_Paulo",
     "grade": {
         "tutoriais": {
             "label": "Tutoriais",

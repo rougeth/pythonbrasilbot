@@ -1,11 +1,13 @@
 from telebot import TeleBot, types
 from decouple import config
+from datetime import datetime
+import re
 
-from utils import inline_keyboard, get_tutorial_events
+from utils import inline_keyboard, get_events_by_date, get_event_template
+from database import content, current_year, get_grade_opcoes, grade_chaves
+
 
 TELEGRAM_TOKEN = config("TELEGRAM_TOKEN")
-
-
 bot = TeleBot(TELEGRAM_TOKEN)
 
 
@@ -59,39 +61,42 @@ def address_callback_query(callback):
 
 @bot.message_handler(commands=["grade", "programação", "programacao"])
 def address(message):
-    keyboard = inline_keyboard([
-        [("Tutoriais", "grade_tutoriais")],
-        [("Palestras", "grade_palestras")],
-        [("Sprints", "grade_sprints")],
-    ])
+    opcoes = get_grade_opcoes(content)
+
+    if len(opcoes) == 0:
+        bot.send_message(
+            message.chat.id,
+            f"Não há grade definida para o ano {current_year}"
+        )
+        return
+
+    keyboard = inline_keyboard(opcoes)
 
     bot.send_message(
         message.chat.id,
-        "Você quer ver a grade de quais atividades da *Python Brasil 2019*?",
+        f"Você quer ver a grade de quais atividades da *Python Brasil {current_year}*?",
         parse_mode="Markdown",
         reply_markup=keyboard,
     )
 
 
-@bot.callback_query_handler(func=lambda callback: callback.data in [
-    "grade_tutoriais",
-    "grade_palestras",
-    "grade_sprints",
-])
+@bot.callback_query_handler(func=lambda callback: callback.data in grade_chaves(content))
 def select_activity_date(callback):
-    if callback.data == "grade_tutoriais":
-        message = "Você deseja ver a programação dos *tutoriais* de qual dia?"
-        keyboard = inline_keyboard([
-            [("23 de Outubro", "grade_tutoriais_23")],
-            [("24 de Outubro", "grade_tutoriais_24")],
-        ])
-    elif callback.data == "grade_palestras":
-        message = "Você deseja ver a programação das *palestras* de qual dia?"
-        keyboard = inline_keyboard([
-            [("25 de Outubro", "grade_palestras_25")],
-            [("26 de Outubro", "grade_palestras_26")],
-            [("27 de Outubro", "grade_palestras_27")],
-        ])
+    key = callback.data.split("_")
+    activity_key = key[1]
+    activity_label = content['grade'][activity_key]['label']
+
+    activity = content['grade'][activity_key]
+    dates = activity['datas']
+
+    opcoes = []
+    for date in dates:
+        date_f = datetime.fromisoformat(date)
+        opcoes.append([(date_f.strftime('%d/%m/%Y'), f"{callback.data}_{date}")])
+
+    keyboard = inline_keyboard(opcoes)
+
+    message = f"Você deseja ver a programação dos *{activity_label}* de qual dia?"
 
     bot.edit_message_text(
         message,
@@ -102,38 +107,21 @@ def select_activity_date(callback):
     )
 
 
-@bot.callback_query_handler(func=lambda callback: callback.data in [
-    "grade_tutoriais_23",
-    "grade_tutoriais_24",
-])
-def tutoriais(callback):
-    day = 23 if callback.data == "grade_tutoriais_23" else 24
+@bot.callback_query_handler(func=lambda callback: re.search("^grade_[a-zA-Z]+_\d{4}-\d{2}-\d{2}$", callback.data))
+def grade_dia(callback):
+    key_splited = callback.data.split("_")
+    activity_key = key_splited[1]
+    data = key_splited[2]
 
-    bot.edit_message_text(
-        f"Programação para os *tutoriais* no dia {day}",
-        callback.message.chat.id,
-        callback.message.message_id,
-        parse_mode="Markdown",
-        reply_markup=None,
-    )
-
-    events = get_tutorial_events()
-    event_message_template = (
-        "*{title}*\n"
-        "- {author}\n"
-        "- {time}\n\n"
-    )
+    events = get_events_by_date(data)
 
     message = ""
-    events = sorted(events,key=lambda event: event["start"]["dateTime"])
+    events = sorted(events, key=lambda event: event["start"]["dateTime"])
     for event in events:
-        if event["start"]["dateTime"].day != day:
-            continue
-
-        message += event_message_template.format(
+        message += get_event_template(
             title=event["summary"],
             author=event["extendedProperties"]["private"]["author"],
-            time=event["start"]["dateTime"].strftime("%Hh%M"),
+            time=event["start"]["dateTime"],
         )
 
     bot.send_message(
