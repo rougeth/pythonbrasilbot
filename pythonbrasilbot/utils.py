@@ -4,7 +4,7 @@ import requests
 from decouple import config
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from pythonbrasilbot.database import content
+from .database import content
 
 
 def inline_keyboard(menu):
