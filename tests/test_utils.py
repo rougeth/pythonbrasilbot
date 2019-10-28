@@ -40,10 +40,14 @@ def test_filter_events_per_date():
         filtered = filter_events_per_date(json_data['items'], "2019-10-27")
 
         assert iter(filtered)
-        assert len(filtered) == 31
+        assert len(filtered) == 3
 
         item = filtered[0]
-        assert item['kind'] == 'calendar#event'
+
+        assert item.keys() >= {'summary', 'start', 'extendedProperties'}
+        assert 'dateTime' in item['start']
+        assert 'private' in item['extendedProperties']
+        assert 'author' in item['extendedProperties']['private']
 
 
 def test_get_event_template():
