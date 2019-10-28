@@ -1,0 +1,23 @@
+{
+    "calendar_url": "",
+    "grade": {
+        "tutoriais": {
+            "label": "Tutoriais",
+            "datas": ["2019-10-23", "2019-10-24"],
+            "endereco": "",
+            "endereco_coordenadas": [333, 333]
+        },
+        "palestras": {
+            "label": "Palestras",
+            "datas": ["2019-10-25", "2019-10-26", "2019-10-27"],
+            "endereco": "",
+            "endereco_coordenadas": [333, 333]
+        },
+        "sprints": {
+            "label": "Sprints",
+            "datas": ["2019-10-28"],
+            "endereco": "",
+            "endereco_coordenadas": [333, 333]
+        }
+    }
+}
