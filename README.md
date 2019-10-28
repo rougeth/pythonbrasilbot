@@ -10,14 +10,14 @@ pipenv install
 cp local.env .env
 ```
 
-configure agora um token para o seu boot telegram no seu arquivo .env para configurar um novo boot use @BotFather 
+configure agora um token para o seu bot telegram no seu arquivo .env para configurar um novo bot use @BotFather 
 
-siga o tutorial do proprio boot exemplo:
+siga o tutorial do proprio bot exemplo:
 
 ```
 /start
-/new_boot
-[nameBoot]
+/new_bot
+[nameBot]
 Use this token to access the HTTP API:
 [chave que você deve colocar no seu .env]
 ```
