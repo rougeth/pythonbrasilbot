@@ -5,15 +5,24 @@ import re
 
 from pythonbrasilbot.utils import inline_keyboard, get_events_by_date, get_event_template
 from pythonbrasilbot.database import content, current_year, get_grade_opcoes, grade_chaves
+from pythonbrasilbot import messages
 
 
 TELEGRAM_TOKEN = config("TELEGRAM_TOKEN")
 bot = TeleBot(TELEGRAM_TOKEN)
 
 
-@bot.message_handler(commands=["start"])
+@bot.message_handler(commands=["start", "help"])
 def hello_world(message):
-    bot.reply_to(message, f"Hello, @{message.from_user.username}!")
+    first_name = message.from_user.first_name
+    now = datetime.now()
+
+    bot.send_message(
+        message.chat.id,
+        messages.start.format(name=first_name, year=now.year),
+        parse_mode="markdown",
+        disable_web_page_preview=True,
+    )
 
 
 @bot.message_handler(commands=["local", "endereço", "endereco"])
