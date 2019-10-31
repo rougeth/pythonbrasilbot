@@ -1,7 +1,7 @@
-# pybr2019bot
-Bot para eventos da python brasil
+# 🐍🇧🇷🤖 Robô Python Brasil  
+[@pythonbrasilbot](https://t.me/pythonbrasilbot)
 
-# instalação
+## Instalação
 
 para iniciar o desenvolvimento
 
@@ -10,7 +10,7 @@ pipenv install
 cp local.env .env
 ```
 
-configure agora um token para o seu bot telegram no seu arquivo .env para configurar um novo bot use @BotFather 
+configure agora um token para o seu bot telegram no seu arquivo .env para configurar um novo bot use @BotFather
 
 siga o tutorial do proprio bot exemplo:
 
@@ -25,4 +25,4 @@ Use this token to access the HTTP API:
 depois de tudo configurado, so rodar:
 ```
 pipenv run python bot.py
-```
+`
